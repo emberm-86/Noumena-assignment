@@ -130,19 +130,18 @@ public class Converter {
                 writer.write("<tr>");
                 if (headerRead) {
                     IntStream.range(0, strings.length).forEach(j -> {
-                                String cellValue = strings[j];
-                                if (prn && j == strings.length - 1) {
-                                    try {
-                                        cellValue = DATE_FORMATTER_1.format(DATE_FORMATTER_2.parse(strings[j]));
-                                    } catch (ParseException e) {
-                                        //
-                                    }
-                                } else if (prn && j == strings.length - 2) {
-                                    cellValue = getDecimalCellValue(strings[j]);
-                                }
-                                writer.write("<td>" + cellValue + "</td>");
+                        String cellValue = strings[j];
+                        if (prn && j == strings.length - 1) {
+                            try {
+                                cellValue = DATE_FORMATTER_1.format(DATE_FORMATTER_2.parse(strings[j]));
+                            } catch (ParseException e) {
+                                //
                             }
-                    );
+                        } else if (prn && j == strings.length - 2) {
+                            cellValue = getDecimalCellValue(strings[j]);
+                        }
+                        writer.write("<td>" + cellValue + "</td>");
+                    });
                 } else {
                     Arrays.stream(strings).forEach(cell -> writer.write("<td>" + cell + "</td>"));
                 }
