@@ -11,7 +11,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.*;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class Converter {
     private static final SimpleDateFormat DATE_FORMATTER_1 = new SimpleDateFormat("dd/MM/yyyy");
@@ -53,8 +52,22 @@ public class Converter {
                     .withEscapeChar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
                     .build();
 
+            boolean headerProcessed = false;
+
             while (sc.hasNextLine()) {
-                csvWriter.writeNext(splitStringToChunks(sc.nextLine(), chunkSizes));
+                String[] strings = splitStringToChunks(sc.nextLine(), chunkSizes);
+                if (headerProcessed) {
+                    // making prn consistent with the other csv
+                    try {
+                        strings[strings.length - 1] = DATE_FORMATTER_1.format(
+                                DATE_FORMATTER_2.parse(strings[strings.length - 1]));
+                    } catch (ParseException e) {
+                        //
+                    }
+                    strings[strings.length - 2] = getDecimalCellValue(strings[strings.length - 2]);
+                }
+                csvWriter.writeNext(strings);
+                headerProcessed = true;
             }
             out.flush();
             csvWriter.close();
@@ -70,7 +83,7 @@ public class Converter {
                     .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                     .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
                     .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                    .build(), false);
+                    .build());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -81,14 +94,14 @@ public class Converter {
                 .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withQuoteChar(ICSVWriter.NO_QUOTE_CHARACTER)
                 .withEscapeChar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
-                .build(), true);
+                .build());
     }
 
-    private static String convertCsvToJson(Reader reader, CSVParser csvParser, boolean prn) {
+    private static String convertCsvToJson(Reader reader, CSVParser csvParser) {
         try (CSVReader csvReader = createCsvReader(reader, csvParser)) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            return mapper.writeValueAsString(getStructure(csvReader.readAll(), prn));
+            return mapper.writeValueAsString(getStructure(csvReader.readAll()));
         } catch (IOException | CsvException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -100,7 +113,7 @@ public class Converter {
                     .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                     .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
                     .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                    .build(), false);
+                    .build());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -116,37 +129,18 @@ public class Converter {
                 .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withQuoteChar(ICSVWriter.NO_QUOTE_CHARACTER)
                 .withEscapeChar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
-                .build(), true);
+                .build());
     }
 
-    private static String convertCsvToHtml(Reader reader, CSVParser csvParser, boolean prn) {
+    private static String convertCsvToHtml(Reader reader, CSVParser csvParser) {
         try (CSVReader csvReader = createCsvReader(reader, csvParser);
              StringWriter writer = new StringWriter()) {
             writer.write("<!DOCTYPE html><head><title>Converter Test</title></head><body><table>\n");
 
-            boolean headerRead = false;
-
             for (String[] strings : csvReader) {
                 writer.write("<tr>");
-                if (headerRead) {
-                    IntStream.range(0, strings.length).forEach(j -> {
-                        String cellValue = strings[j];
-                        if (prn && j == strings.length - 1) {
-                            try {
-                                cellValue = DATE_FORMATTER_1.format(DATE_FORMATTER_2.parse(strings[j]));
-                            } catch (ParseException e) {
-                                //
-                            }
-                        } else if (prn && j == strings.length - 2) {
-                            cellValue = getDecimalCellValue(strings[j]);
-                        }
-                        writer.write("<td>" + cellValue + "</td>");
-                    });
-                } else {
-                    Arrays.stream(strings).forEach(cell -> writer.write("<td>" + cell + "</td>"));
-                }
+                Arrays.stream(strings).forEach(cell -> writer.write("<td>" + cell + "</td>"));
                 writer.write("</tr>\n");
-                headerRead = true;
             }
 
             writer.write("</table></body></html>\n");
@@ -161,7 +155,7 @@ public class Converter {
                 .withCSVParser(csvParser).build();
     }
 
-    private static List<Map<String, String>> getStructure(List<String[]> values, boolean prn) {
+    private static List<Map<String, String>> getStructure(List<String[]> values) {
         String[] header = values.getFirst();
         List<Map<String, String>> structure = new ArrayList<>();
 
@@ -169,19 +163,7 @@ public class Converter {
             String[] strings = values.get(i);
             Map<String, String> map = new LinkedHashMap<>();
             for (int j = 0; j < strings.length; j++) {
-                String cellValue = strings[j];
-                if (prn && "Birthday".equals(header[j])) {
-                    try {
-                        cellValue = DATE_FORMATTER_1.format(DATE_FORMATTER_2.parse(cellValue));
-                    } catch (ParseException e) {
-                        //
-                    }
-                }
-
-                if (prn && "Credit Limit".equals(header[j])) {
-                    cellValue = getDecimalCellValue(cellValue);
-                }
-                map.put(header[j], cellValue);
+                map.put(header[j], strings[j]);
             }
             structure.add(map);
         }
@@ -189,7 +171,7 @@ public class Converter {
     }
 
     private static String getDecimalCellValue(String cellValue) {
-        return new BigDecimal(cellValue).divide(new BigDecimal("100.00000"), MATH_CONTEXT)
+        return new BigDecimal(cellValue).divide(new BigDecimal("100"), MATH_CONTEXT)
                 .setScale(2, RoundingMode.HALF_DOWN)
                 .stripTrailingZeros()
                 .toPlainString();
