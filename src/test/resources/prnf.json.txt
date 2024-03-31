@@ -1,0 +1,50 @@
+[ {
+  "Name" : "Johnson, John",
+  "Address" : "Voorstraat 32",
+  "Postcode" : "3122gg",
+  "Phone" : "020 3849381",
+  "Credit Limit" : "10000",
+  "Birthday" : "01/01/1987"
+}, {
+  "Name" : "Anderson, Paul",
+  "Address" : "Dorpsplein 3A",
+  "Postcode" : "4532 AA",
+  "Phone" : "030 3458986",
+  "Credit Limit" : "109093",
+  "Birthday" : "03/12/1965"
+}, {
+  "Name" : "Wicket, Steve",
+  "Address" : "Mendelssohnstraat 54d",
+  "Postcode" : "3423 ba",
+  "Phone" : "0313-398475",
+  "Credit Limit" : "934",
+  "Birthday" : "03/06/1964"
+}, {
+  "Name" : "Benetar, Pat",
+  "Address" : "Driehoog 3zwart",
+  "Postcode" : "2340 CC",
+  "Phone" : "06-28938945",
+  "Credit Limit" : "54",
+  "Birthday" : "04/09/1964"
+}, {
+  "Name" : "Gibson, Mal",
+  "Address" : "Vredenburg 21",
+  "Postcode" : "3209 DD",
+  "Phone" : "06-48958986",
+  "Credit Limit" : "54.5",
+  "Birthday" : "09/11/1978"
+}, {
+  "Name" : "Friendly, User",
+  "Address" : "Sint Jansstraat 32",
+  "Postcode" : "4220 EE",
+  "Phone" : "0885-291029",
+  "Credit Limit" : "63.6",
+  "Birthday" : "10/08/1980"
+}, {
+  "Name" : "Smith, John",
+  "Address" : "B�rkestra�e 32",
+  "Postcode" : "87823",
+  "Phone" : "+44 728 889838",
+  "Credit Limit" : "9898.3",
+  "Birthday" : "20/09/1999"
+} ]
