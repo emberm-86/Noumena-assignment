@@ -42,7 +42,7 @@
   "Birthday" : "10/08/1980"
 }, {
   "Name" : "Smith, John",
-  "Address" : "B�rkestra�e 32",
+  "Address" : "Borkestraße 32",
   "Postcode" : "87823",
   "Phone" : "+44 728 889838",
   "Credit Limit" : "9898.3",

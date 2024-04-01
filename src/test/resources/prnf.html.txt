@@ -6,5 +6,5 @@
 <tr><td>Benetar, Pat</td><td>Driehoog 3zwart</td><td>2340 CC</td><td>06-28938945</td><td>54</td><td>04/09/1964</td></tr>
 <tr><td>Gibson, Mal</td><td>Vredenburg 21</td><td>3209 DD</td><td>06-48958986</td><td>54.5</td><td>09/11/1978</td></tr>
 <tr><td>Friendly, User</td><td>Sint Jansstraat 32</td><td>4220 EE</td><td>0885-291029</td><td>63.6</td><td>10/08/1980</td></tr>
-<tr><td>Smith, John</td><td>B�rkestra�e 32</td><td>87823</td><td>+44 728 889838</td><td>9898.3</td><td>20/09/1999</td></tr>
+<tr><td>Smith, John</td><td>Borkestraße 32</td><td>87823</td><td>+44 728 889838</td><td>9898.3</td><td>20/09/1999</td></tr>
 </table></body></html>
