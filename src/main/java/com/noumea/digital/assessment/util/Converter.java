@@ -49,7 +49,6 @@ public class Converter {
     }
 
     private static byte[] convertPrnToCsv(String fileContent, int... chunkSizes) {
-        String fault = null;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              OutputStreamWriter out = new OutputStreamWriter(bos);
              BufferedWriter writer = new BufferedWriter(out);
@@ -74,7 +73,6 @@ public class Converter {
                     } catch (ParseException e) {
                         //
                     }
-                    fault = strings[strings.length - 2];
                     strings[strings.length - 2] = getDecimalCellValue(strings[strings.length - 2]);
                 }
                 csvWriter.writeNext(strings);
@@ -84,7 +82,6 @@ public class Converter {
             csvWriter.close();
             return bos.toByteArray();
         } catch (IOException e) {
-            System.out.println(fault);
             throw new RuntimeException(e.getMessage(), e);
         }
     }
