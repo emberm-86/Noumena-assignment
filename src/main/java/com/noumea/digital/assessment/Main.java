@@ -5,6 +5,7 @@ import static com.noumea.digital.assessment.util.Converter.*;
 public class Main {
 
     private static final int[] CHUNK_SIZES = {16, 22, 9, 14, 13, 8};
+
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Number of arguments must be 3!");

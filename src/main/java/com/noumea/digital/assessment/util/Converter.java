@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
-import java.text.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Converter {
@@ -19,33 +20,11 @@ public class Converter {
     public static final MathContext MATH_CONTEXT = new MathContext(9, RoundingMode.DOWN);
 
     public static String convertPrnFileToJson(String fileContent, int... chunkSizes) {
-        return convertCsvToJson(convertPrnToCsv(fileContent, chunkSizes), new CSVParserBuilder()
-                .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
-                .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
-                .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                .build());
+        return convertCsvToJson(convertPrnToCsv(fileContent, chunkSizes));
     }
 
     public static String convertPrnFileToHtml(String fileContent, int... chunkSizes) {
-        return convertCsvToHtml(convertPrnToCsv(fileContent, chunkSizes), new CSVParserBuilder()
-                .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
-                .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
-                .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                .build());
-    }
-
-    private static String[] splitStringToChunks(String inputString, int... chunkSizes) {
-        List<String> list = new ArrayList<>();
-        int chunkStart, chunkEnd = 0;
-
-        for (int length : chunkSizes) {
-            chunkStart = chunkEnd;
-            chunkEnd = chunkStart + length;
-            String dataChunk = inputString.substring(chunkStart, chunkEnd);
-            String trim = dataChunk.trim();
-            list.add(trim);
-        }
-        return list.toArray(new String[0]);
+        return convertCsvToHtml(convertPrnToCsv(fileContent, chunkSizes));
     }
 
     private static byte[] convertPrnToCsv(String fileContent, int... chunkSizes) {
@@ -86,18 +65,40 @@ public class Converter {
         }
     }
 
-    public static String convertCsvFileToJson(String fileContent) {
-        return convertCsvToJson(fileContent.getBytes(StandardCharsets.UTF_8), new CSVParserBuilder()
+    private static CSVParser createDefaultParser() {
+        return new CSVParserBuilder()
                 .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
                 .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                .build());
+                .build();
     }
 
-    private static String convertCsvToJson(byte[] bytes, CSVParser csvParser) {
+    private static String[] splitStringToChunks(String inputString, int... chunkSizes) {
+        List<String> list = new ArrayList<>();
+        int chunkStart, chunkEnd = 0;
+
+        for (int length : chunkSizes) {
+            chunkStart = chunkEnd;
+            chunkEnd = chunkStart + length;
+            String dataChunk = inputString.substring(chunkStart, chunkEnd);
+            String trim = dataChunk.trim();
+            list.add(trim);
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public static String convertCsvFileToJson(String fileContent) {
+        return convertCsvToJson(fileContent.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String convertCsvFileToHtml(String fileContent) {
+        return convertCsvToHtml(fileContent.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String convertCsvToJson(byte[] bytes) {
         Reader reader = new InputStreamReader(new ByteArrayInputStream(bytes));
 
-        try (CSVReader csvReader = createCsvReader(reader, csvParser)) {
+        try (CSVReader csvReader = createCsvReader(reader, createDefaultParser())) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             return mapper.writeValueAsString(getStructure(csvReader.readAll()));
@@ -106,20 +107,10 @@ public class Converter {
         }
     }
 
-    public static String convertCsvFileToHtml(String fileContent) {
-        return convertCsvToHtml(fileContent.getBytes(StandardCharsets.UTF_8), new CSVParserBuilder()
-                .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
-                .withQuoteChar(ICSVWriter.DEFAULT_QUOTE_CHARACTER)
-                .withEscapeChar(ICSVWriter.NO_ESCAPE_CHARACTER)
-                .build());
-    }
+    private static String convertCsvToHtml(byte[] bytes) {
+        Reader reader = new InputStreamReader(new ByteArrayInputStream(bytes));
 
-    private static String convertCsvToHtml(byte[] bytes, CSVParser csvParser) {
-        return convertCsvToHtml(new InputStreamReader(new ByteArrayInputStream(bytes)), csvParser);
-    }
-
-    private static String convertCsvToHtml(Reader reader, CSVParser csvParser) {
-        try (CSVReader csvReader = createCsvReader(reader, csvParser);
+        try (CSVReader csvReader = createCsvReader(reader, createDefaultParser());
              StringWriter writer = new StringWriter()) {
             writer.write("<!DOCTYPE html><head><title>Converter Test</title></head><body><table>\n");
 
