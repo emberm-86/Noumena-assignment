@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Converter {
+
     private static final SimpleDateFormat DATE_FORMATTER_1 = new SimpleDateFormat("dd/MM/yyyy");
     private static final SimpleDateFormat DATE_FORMATTER_2 = new SimpleDateFormat("yyyyMMdd");
     public static final MathContext MATH_CONTEXT = new MathContext(9, RoundingMode.DOWN);
@@ -32,6 +33,7 @@ public class Converter {
              OutputStreamWriter out = new OutputStreamWriter(bos);
              BufferedWriter writer = new BufferedWriter(out);
              InputStream bis = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))) {
+
             Scanner sc = new Scanner(bis);
             ICSVWriter csvWriter = new CSVWriterBuilder(writer)
                     .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
@@ -112,6 +114,7 @@ public class Converter {
 
         try (CSVReader csvReader = createCsvReader(reader, createDefaultParser());
              StringWriter writer = new StringWriter()) {
+
             writer.write("<!DOCTYPE html><head><title>Converter Test</title></head><body><table>\n");
 
             for (String[] strings : csvReader) {
@@ -128,8 +131,7 @@ public class Converter {
     }
 
     private static CSVReader createCsvReader(Reader reader, CSVParser csvParser) {
-        return new CSVReaderBuilder(reader)
-                .withCSVParser(csvParser).build();
+        return new CSVReaderBuilder(reader).withCSVParser(csvParser).build();
     }
 
     private static List<Map<String, String>> getStructure(List<String[]> values) {
