@@ -5,6 +5,11 @@ import static com.noumea.digital.assessment.util.Converter.*;
 public class Main {
 
     private static final int[] CHUNK_SIZES = {16, 22, 9, 14, 13, 8};
+    private static final String CSV = "csv";
+    private static final String PRN = "prn";
+    private static final String JSON = "json";
+    private static final String HTML = "html";
+
 
     public static void main(String[] args) {
         if (args.length != 3) {
@@ -16,16 +21,17 @@ public class Main {
         String outputType = args[1];
         String fileContent = args[2];
 
-        if ("csv".equals(inputType) && "json".equals(outputType)) {
+        if (CSV.equals(inputType) && JSON.equals(outputType)) {
             System.out.println(convertCsvFileToJson(fileContent));
-        } else if ("prn".equals(inputType) && "json".equals(outputType)) {
+        } else if (PRN.equals(inputType) && JSON.equals(outputType)) {
             System.out.println(convertPrnFileToJson(fileContent, CHUNK_SIZES));
-        } else if ("csv".equals(inputType) && "html".equals(outputType)) {
+        } else if (CSV.equals(inputType) && HTML.equals(outputType)) {
             System.out.println(convertCsvFileToHtml(fileContent));
-        } else if ("prn".equals(inputType) && "html".equals(outputType)) {
+        } else if (PRN.equals(inputType) && HTML.equals(outputType)) {
             System.out.println(convertPrnFileToHtml(fileContent, CHUNK_SIZES));
         } else {
-            System.out.println("Please provide the following input format:\nFirst: csv or prn, second: json or html!");
+            System.out.println("Please provide the following input format:\n" +
+                    "First: csv or prn, second: json or html!");
         }
     }
 }

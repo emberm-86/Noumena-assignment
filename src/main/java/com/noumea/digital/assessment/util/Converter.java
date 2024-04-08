@@ -47,7 +47,7 @@ public class Converter {
                 String[] strings = splitStringToChunks(sc.nextLine().trim(), chunkSizes);
 
                 if (headerProcessed) {
-                    // making prn consistent with the other csv
+                    // making prn consistent with the csv
                     try {
                         strings[strings.length - 1] = DATE_FORMATTER_1.format(
                                 DATE_FORMATTER_2.parse(strings[strings.length - 1]));
