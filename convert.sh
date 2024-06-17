@@ -24,19 +24,37 @@ dir="$SCRIPT_DIR/target"
 # Jar file name
 jar_name="cli.jar"
 
+# Lock file
+LOCKFILE="$SCRIPT_DIR/lockfile.lock"
+TMPLOCKFILE=$(mktemp)
+
+# Function to remove the lock file on exit
+cleanup() {
+  rm -f "$TMPLOCKFILE" "$LOCKFILE"
+}
+trap cleanup EXIT
+
+# Try to acquire the lock
+if ! ln "$TMPLOCKFILE" "$LOCKFILE" 2>/dev/null; then
+  echo "Another instance is running, exiting.."
+  cleanup
+  exit 1
+fi
+
 # Check if the jar file exists and is executable
 if [ ! -f "$dir/$jar_name" ]; then
   echo "Jar file not found: $dir/$jar_name"
+  cleanup
   exit 1
 fi
 
 if [ ! -x "$dir/$jar_name" ]; then
-  chmod u+x "$dir/$jar_name" || { echo "Failed to make jar file executable"; exit 1; }
+  chmod u+x "$dir/$jar_name" || { echo "Failed to make jar file executable"; cleanup; exit 1; }
 fi
 
 # Read and process input lines
 while IFS= read -r line; do
-  encoded_line=$(echo "$line" | iconv -f ISO-8859-2 -t UTF-8) || { echo "Encoding conversion failed"; exit 1; }
+  encoded_line=$(echo "$line" | iconv -f ISO-8859-2 -t UTF-8) || { echo "Encoding conversion failed"; cleanup; exit 1; }
   arg3+=("$encoded_line${NL}")
 done
 
@@ -44,5 +62,8 @@ done
 mvn exec:java -Dexec.mainClass="com.noumea.digital.assessment.Main" \
   -Dexec.args="$arg1 $arg2 '${arg3[*]}'" --batch-mode -D"org.slf4j.simpleLogger.defaultLogLevel=ERROR" || {
     echo "Java execution failed"
+    cleanup
     exit 1
 }
+
+cleanup
