@@ -57,7 +57,7 @@ public class Converter {
       csvWriter.close();
       return bos.toByteArray();
     } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
+      throw new BusinessException(e.getMessage(), e);
     }
   }
 
@@ -99,7 +99,7 @@ public class Converter {
       mapper.enable(SerializationFeature.INDENT_OUTPUT);
       return mapper.writeValueAsString(getStructure(csvReader.readAll()));
     } catch (IOException | CsvException e) {
-      throw new RuntimeException(e.getMessage(), e);
+      throw new BusinessException(e.getMessage(), e);
     }
   }
 
