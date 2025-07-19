@@ -1,5 +1,7 @@
 package com.noumea.digital.assessment;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class Main {
 
     String inputType = args[0];
     String outputType = args[1];
-    String fileContent = args[2];
+    String fileContent = new String(Base64.getDecoder().decode(args[2]), StandardCharsets.UTF_8);
 
     if (CSV.equals(inputType) && JSON.equals(outputType)) {
       System.out.println(convertCsvFileToJson(fileContent));

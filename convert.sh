@@ -58,13 +58,14 @@ fi
 # Read and process input lines
 while IFS= read -r line; do
   encoded_line=$(echo "$line" | iconv -f ISO-8859-1 -t UTF-8) || { echo "Encoding conversion failed"; cleanup; exit 1; }
-  arg3+=("$encoded_line${NL}")
+  arg3+=("$encoded_line")
 done
 
-export MAVEN_OPTS="-Dfile.encoding=UTF8"
+joined_arg3=$(printf "%s\n" "${arg3[@]}")
+encoded_arg3=$(printf "%s" "$joined_arg3" | base64 | tr -d '\n')
 
 # Execute the Java command
-mvn exec:java -Dexec.args="$arg1 $arg2 '${arg3[*]}'" \
+mvn exec:java -Dexec.args="$arg1 $arg2 \"$encoded_arg3\"" \
 	-Dexec.jvmArgs="-Dfile.encoding=UTF-8" \
 	--batch-mode -D"org.slf4j.simpleLogger.defaultLogLevel=ERROR" || {
     echo "Java execution failed"
