@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConverterTest {
 
-  private static final String CSVCONTENT =
+  private static final String CSV_CONTENT =
       """
                     Name,Address,Postcode,Phone,Credit Limit,Birthday
                     "Johnson, John",Voorstraat 32,3122gg,020 3849381,10000,01/01/1987
@@ -25,7 +25,7 @@ class ConverterTest {
                     "Friendly, User",Sint Jansstraat 32,4220 EE,0885-291029,63.6,10/08/1980
                     "Smith, John",Børkestraße 32,87823,+44 728 889838,9898.3,20/09/1999""";
 
-  private static final String PRNCONTENT =
+  private static final String PRN_CONTENT =
       """
                     Name            Address               Postcode Phone         Credit Limit Birthday
                     Johnson, John   Voorstraat 32         3122gg   020 3849381        1000000 19870101
@@ -43,7 +43,7 @@ class ConverterTest {
   @Test
   void testCsvToJson() throws IOException {
     String fileContent = getTestFileContent("csv.json.txt");
-    String workbook = convertCsvFileToJson(CSVCONTENT);
+    String workbook = convertCsvFileToJson(CSV_CONTENT);
     assertEquals(workbook, fileContent);
   }
 
@@ -51,14 +51,14 @@ class ConverterTest {
   void testPrnToJson() throws IOException {
     String fileContent = getTestFileContent("prnf.json.txt");
     String workbook =
-        convertPrnFileToJson(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToJson(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook, fileContent);
   }
 
   @Test
   void testCsvToHtml() throws IOException {
     String fileContent = getTestFileContent("csv.html.txt");
-    String workbook = convertCsvFileToHtml(CSVCONTENT);
+    String workbook = convertCsvFileToHtml(CSV_CONTENT);
     assertEquals(workbook, fileContent);
   }
 
@@ -66,23 +66,23 @@ class ConverterTest {
   void testPrnToHtml() throws IOException {
     String fileContent = getTestFileContent("prnf.html.txt");
     String workbook =
-        convertPrnFileToHtml(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToHtml(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook, fileContent);
   }
 
   @Test
   void compareJson() {
-    String workbook1 = convertCsvFileToJson(CSVCONTENT);
+    String workbook1 = convertCsvFileToJson(CSV_CONTENT);
     String workbook2 =
-        convertPrnFileToJson(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToJson(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook1, workbook2);
   }
 
   @Test
   void compareHtml() {
-    String workbook1 = convertCsvFileToHtml(CSVCONTENT);
+    String workbook1 = convertCsvFileToHtml(CSV_CONTENT);
     String workbook2 =
-        convertPrnFileToHtml(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToHtml(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook1, workbook2);
   }
 
