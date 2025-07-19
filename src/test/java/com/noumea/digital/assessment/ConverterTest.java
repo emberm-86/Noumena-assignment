@@ -12,9 +12,9 @@ import static com.noumea.digital.assessment.util.Converter.*;
 import static java.nio.file.Files.readAllBytes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConverterTest {
+class ConverterTest {
 
-  String CSV_CONTENT =
+  private static final String CSVCONTENT =
       """
                     Name,Address,Postcode,Phone,Credit Limit,Birthday
                     "Johnson, John",Voorstraat 32,3122gg,020 3849381,10000,01/01/1987
@@ -23,9 +23,9 @@ public class ConverterTest {
                     "Benetar, Pat",Driehoog 3zwart,2340 CC,06-28938945,54,04/09/1964
                     "Gibson, Mal",Vredenburg 21,3209 DD,06-48958986,54.5,09/11/1978
                     "Friendly, User",Sint Jansstraat 32,4220 EE,0885-291029,63.6,10/08/1980
-                    "Smith, John",Břrkestraße 32,87823,+44 728 889838,9898.3,20/09/1999""";
+                    "Smith, John",Børkestraße 32,87823,+44 728 889838,9898.3,20/09/1999""";
 
-  String PRN_CONTENT =
+  private static final String PRNCONTENT =
       """
                     Name            Address               Postcode Phone         Credit Limit Birthday
                     Johnson, John   Voorstraat 32         3122gg   020 3849381        1000000 19870101
@@ -34,55 +34,55 @@ public class ConverterTest {
                     Benetar, Pat    Driehoog 3zwart       2340 CC  06-28938945           5400 19640904
                     Gibson, Mal     Vredenburg 21         3209 DD  06-48958986           5450 19781109
                     Friendly, User  Sint Jansstraat 32    4220 EE  0885-291029           6360 19800810
-                    Smith, John     Břrkestraße 32        87823    +44 728 889838      989830 19990920""";
+                    Smith, John     Børkestraße 32        87823    +44 728 889838      989830 19990920""";
 
   private static final int[] CHUNK_SIZES = {16, 22, 9, 14, 13, 8};
   private static final List<Integer> DECIMAL_COL_INDEXES = Collections.singletonList(4);
   private static final List<Integer> DATE_COL_INDEXES = Collections.singletonList(5);
 
   @Test
-  public void testCsvToJson() throws IOException {
+  void testCsvToJson() throws IOException {
     String fileContent = getTestFileContent("csv.json.txt");
-    String workbook = convertCsvFileToJson(CSV_CONTENT);
+    String workbook = convertCsvFileToJson(CSVCONTENT);
     assertEquals(workbook, fileContent);
   }
 
   @Test
-  public void testPrnToJson() throws IOException {
+  void testPrnToJson() throws IOException {
     String fileContent = getTestFileContent("prnf.json.txt");
     String workbook =
-        convertPrnFileToJson(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToJson(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook, fileContent);
   }
 
   @Test
-  public void testCsvToHtml() throws IOException {
+  void testCsvToHtml() throws IOException {
     String fileContent = getTestFileContent("csv.html.txt");
-    String workbook = convertCsvFileToHtml(CSV_CONTENT);
+    String workbook = convertCsvFileToHtml(CSVCONTENT);
     assertEquals(workbook, fileContent);
   }
 
   @Test
-  public void testPrnToHtml() throws IOException {
+  void testPrnToHtml() throws IOException {
     String fileContent = getTestFileContent("prnf.html.txt");
     String workbook =
-        convertPrnFileToHtml(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToHtml(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook, fileContent);
   }
 
   @Test
-  public void compareJson() {
-    String workbook1 = convertCsvFileToJson(CSV_CONTENT);
+  void compareJson() {
+    String workbook1 = convertCsvFileToJson(CSVCONTENT);
     String workbook2 =
-        convertPrnFileToJson(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToJson(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook1, workbook2);
   }
 
   @Test
-  public void compareHtml() {
-    String workbook1 = convertCsvFileToHtml(CSV_CONTENT);
+  void compareHtml() {
+    String workbook1 = convertCsvFileToHtml(CSVCONTENT);
     String workbook2 =
-        convertPrnFileToHtml(PRN_CONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
+        convertPrnFileToHtml(PRNCONTENT, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     assertEquals(workbook1, workbook2);
   }
 

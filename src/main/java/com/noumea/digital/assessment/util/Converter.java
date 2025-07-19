@@ -14,6 +14,11 @@ import static com.noumea.digital.assessment.util.FormattingProvider.*;
 
 public class Converter {
 
+  private static final String LINE_ENDING = "\r\n";
+
+  private Converter() {
+  }
+
   public static String convertPrnFileToJson(
       String fileContent,
       List<Integer> decimalColIndexes,
@@ -104,24 +109,28 @@ public class Converter {
     try (CSVReader csvReader = createDefaultCsvReader(reader);
         StringWriter writer = new StringWriter()) {
 
-      writer.write("<!DOCTYPE html><head><title>Converter Test</title></head><body><table>\n");
+      writer.write("<!DOCTYPE html><head><title>Converter Test</title></head><body><table>");
+      writer.write(LINE_ENDING);
 
       for (String[] strings : csvReader) {
         writer.write("<tr>");
         Arrays.stream(strings).forEach(cell -> writer.write("<td>" + cell.trim() + "</td>"));
-        writer.write("</tr>\n");
+        writer.write("</tr>");
+        writer.write(LINE_ENDING);
       }
 
-      writer.write("</table></body></html>\n");
+      writer.write("</table></body></html>");
+      writer.write(LINE_ENDING);
       return writer.toString();
     } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
+      throw new BusinessException(e.getMessage(), e);
     }
   }
 
   private static String[] splitStringToChunks(String inputString, int... chunkSizes) {
     List<String> list = new ArrayList<>();
-    int chunkStart, chunkEnd = 0;
+    int chunkStart;
+    int chunkEnd = 0;
 
     for (int length : chunkSizes) {
       chunkStart = chunkEnd;

@@ -8,10 +8,15 @@ import java.text.SimpleDateFormat;
 
 public class FormattingProvider {
 
-  private static final SimpleDateFormat DATE_FORMATTER_1 = new SimpleDateFormat("dd/MM/yyyy");
-  private static final SimpleDateFormat DATE_FORMATTER_2 = new SimpleDateFormat("yyyyMMdd");
+  private final SimpleDateFormat dateFormatter1 = new SimpleDateFormat("dd/MM/yyyy");
+  private final SimpleDateFormat dateFormatter2 = new SimpleDateFormat("yyyyMMdd");
   private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_DOWN;
   private static final MathContext MATH_CONTEXT = new MathContext(9, ROUNDING_MODE);
+  private static final FormattingProvider INSTANCE = new FormattingProvider();
+
+  private FormattingProvider() {
+
+  }
 
   public static String getDecimalCellValue(String cellValue) {
     return new BigDecimal(cellValue)
@@ -21,9 +26,9 @@ public class FormattingProvider {
         .toPlainString();
   }
 
-  public static String getFormattedDate(String str) {
+  public static synchronized String getFormattedDate(String str) {
     try {
-      return DATE_FORMATTER_1.format(DATE_FORMATTER_2.parse(str));
+      return INSTANCE.dateFormatter1.format(INSTANCE.dateFormatter2.parse(str));
     } catch (ParseException e) {
       return "#PARSE_ERROR";
     }

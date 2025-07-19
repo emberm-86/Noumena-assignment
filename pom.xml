@@ -47,11 +47,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${apache.commons.lang.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>${opencsv.version}</version>
@@ -74,6 +69,20 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>com.noumea.digital.assessment.Main</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>file.encoding</key>
+                            <value>UTF-8</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>

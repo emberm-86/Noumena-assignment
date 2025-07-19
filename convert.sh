@@ -4,6 +4,9 @@
 arg1=$1
 arg2=$2
 
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # Perform some validation on input arguments
 if [ -z "$arg1" ] || [ -z "$arg2" ]; then
   echo "Missing arguments, exiting.."
@@ -54,13 +57,16 @@ fi
 
 # Read and process input lines
 while IFS= read -r line; do
-  encoded_line=$(echo "$line" | iconv -f ISO-8859-2 -t UTF-8) || { echo "Encoding conversion failed"; cleanup; exit 1; }
+  encoded_line=$(echo "$line" | iconv -f ISO-8859-1 -t UTF-8) || { echo "Encoding conversion failed"; cleanup; exit 1; }
   arg3+=("$encoded_line${NL}")
 done
 
+export MAVEN_OPTS="-Dfile.encoding=UTF8"
+
 # Execute the Java command
-mvn exec:java -Dexec.mainClass="com.noumea.digital.assessment.Main" \
-  -Dexec.args="$arg1 $arg2 '${arg3[*]}'" --batch-mode -D"org.slf4j.simpleLogger.defaultLogLevel=ERROR" || {
+mvn exec:java -Dexec.args="$arg1 $arg2 '${arg3[*]}'" \
+	-Dexec.jvmArgs="-Dfile.encoding=UTF-8" \
+	--batch-mode -D"org.slf4j.simpleLogger.defaultLogLevel=ERROR" || {
     echo "Java execution failed"
     cleanup
     exit 1

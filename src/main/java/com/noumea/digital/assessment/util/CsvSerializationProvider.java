@@ -7,6 +7,10 @@ import java.io.Reader;
 
 public class CsvSerializationProvider {
 
+  private CsvSerializationProvider() {
+
+  }
+
   public static ICSVWriter createDefaultCsvWriter(BufferedWriter writer) {
     return new CSVWriterBuilder(writer)
         .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
