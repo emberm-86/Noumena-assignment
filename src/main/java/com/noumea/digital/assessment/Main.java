@@ -1,5 +1,8 @@
 package com.noumea.digital.assessment;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
@@ -17,10 +20,11 @@ public class Main {
 
   private static final List<Integer> DECIMAL_COL_INDEXES = Collections.singletonList(4);
   private static final List<Integer> DATE_COL_INDEXES = Collections.singletonList(5);
+  private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
   public static void main(String[] args) {
     if (args.length != 3) {
-      System.out.println("Number of arguments must be 3!");
+      LOGGER.info("Number of arguments must be 3!");
       return;
     }
 
@@ -28,18 +32,23 @@ public class Main {
     String outputType = args[1];
     String fileContent = new String(Base64.getDecoder().decode(args[2]), StandardCharsets.UTF_8);
 
+    if (!LOGGER.isInfoEnabled()) {
+      LOGGER.error("Please check your log config info is not enabled!");
+      return;
+    }
+
     if (CSV.equals(inputType) && JSON.equals(outputType)) {
-      System.out.println(convertCsvFileToJson(fileContent));
+      LOGGER.info(convertCsvFileToJson(fileContent));
     } else if (PRN.equals(inputType) && JSON.equals(outputType)) {
-      System.out.println(
+      LOGGER.info(
           convertPrnFileToJson(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES));
     } else if (CSV.equals(inputType) && HTML.equals(outputType)) {
-      System.out.println(convertCsvFileToHtml(fileContent));
+      LOGGER.info(convertCsvFileToHtml(fileContent));
     } else if (PRN.equals(inputType) && HTML.equals(outputType)) {
-      System.out.println(
+      LOGGER.info(
           convertPrnFileToHtml(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES));
     } else {
-      System.out.println(
+      LOGGER.info(
           "Please provide the following input format:\n"
               + "First: csv or prn, second: json or html!");
     }
