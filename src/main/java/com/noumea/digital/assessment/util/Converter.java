@@ -14,7 +14,7 @@ import static com.noumea.digital.assessment.util.FormattingProvider.*;
 
 public class Converter {
 
-  private static final String LINE_ENDING = "\r\n";
+  private static final String LINE_ENDING = System.lineSeparator();
 
   private Converter() {
   }
