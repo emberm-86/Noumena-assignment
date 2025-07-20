@@ -33,6 +33,7 @@ public class Main {
     String fileContent = new String(Base64.getDecoder().decode(args[2]), StandardCharsets.UTF_8);
 
     if (!LOGGER.isInfoEnabled()) {
+      // Sonar has a stupid warning.
       LOGGER.error("Please check your log config, info is not enabled!");
       return;
     }
