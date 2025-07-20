@@ -32,26 +32,24 @@ public class Main {
     String outputType = args[1];
     String fileContent = new String(Base64.getDecoder().decode(args[2]), StandardCharsets.UTF_8);
 
-    if (!LOGGER.isInfoEnabled()) {
-      // Sonar has a stupid warning.
-      LOGGER.error("Please check your log config, info is not enabled!");
-      return;
-    }
+    String result;
 
     if (CSV.equals(inputType) && JSON.equals(outputType)) {
-      LOGGER.info(convertCsvFileToJson(fileContent));
+      result = convertCsvFileToJson(fileContent);
     } else if (PRN.equals(inputType) && JSON.equals(outputType)) {
-      LOGGER.info(
-          convertPrnFileToJson(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES));
+      result =
+          convertPrnFileToJson(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     } else if (CSV.equals(inputType) && HTML.equals(outputType)) {
-      LOGGER.info(convertCsvFileToHtml(fileContent));
+      result = convertCsvFileToHtml(fileContent);
     } else if (PRN.equals(inputType) && HTML.equals(outputType)) {
-      LOGGER.info(
-          convertPrnFileToHtml(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES));
+      result =
+          convertPrnFileToHtml(fileContent, DECIMAL_COL_INDEXES, DATE_COL_INDEXES, CHUNK_SIZES);
     } else {
-      LOGGER.info(
+      LOGGER.warn(
           "Please provide the following input format:\n"
               + "First: csv or prn, second: json or html!");
+      return;
     }
+    LOGGER.info(result);
   }
 }
