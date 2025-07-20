@@ -1,7 +1,7 @@
 package com.noumea.digital.assessment;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -20,7 +20,7 @@ public class Main {
 
   private static final List<Integer> DECIMAL_COL_INDEXES = Collections.singletonList(4);
   private static final List<Integer> DATE_COL_INDEXES = Collections.singletonList(5);
-  private static final Logger LOGGER = LogManager.getLogger(Main.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
   public static void main(String[] args) {
     if (args.length != 3) {
